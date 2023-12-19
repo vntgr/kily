@@ -1,19 +1,29 @@
 image: archlinux
 packages:
-  - nodejs
-  - npm
+  - netlify
 secrets:
   - bad5de78-80a3-41b1-8f40-21a1d0ae63a6
 environment:
-  # Replace this ID with your site's API ID
   NETLIFY_SITE_ID: 35283bf6-b739-4d7c-b146-dd5c0077bf50
+  SITE_FOLDER: public
 tasks:
   - deploy: |
-      cd kily/public
+      cd kily
+     
+      # Only deploy on master.
+      if [ "$(git rev-parse origin/master)" != "$(git rev-parse HEAD)" ]; then \
+        complete-build; \
+      fi
+      
+      # Source the secrets in ~/.buildsecrets as environment variables.
       {
         set +x
         . ~/.buildsecrets
         set -x
       }
+     
+      # Set the Netlify environment variable.
       export NETLIFY_AUTH_TOKEN
-      npm run deploy
+    
+      # Call the deploy.
+      netlify deploy --site=$NETLIFY_SITE_ID --dir=public --prod
