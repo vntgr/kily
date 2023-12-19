@@ -8,14 +8,8 @@ environment:
   # Replace this ID with your site's API ID
   NETLIFY_SITE_ID: 35283bf6-b739-4d7c-b146-dd5c0077bf50
 tasks:
-  - setup: |
-      cd kily
-      npm i
-  - build: |
-      cd kily
-      NODE_ENV=production npm run build
   - deploy: |
-      cd kily
+      cd kily/public
       {
         set +x
         . ~/.buildsecrets
